@@ -63,12 +63,18 @@ export default function Participan(props) {
     }
 
     const handleBroadcast = () => {
+        if (!event?.id) {
+            alert('Pilih event terlebih dahulu untuk broadcast.')
+            return
+        }
         const message = prompt('Pesan broadcast (Teams/Email):')
         if (!message) return
-        router.post(route('participant.broadcast'), {
+        router.post('/participants/broadcast', {
             event_id: event?.id,
             status: registrationStatus,
             message,
+        }, {
+            preserveScroll: true,
         })
     }
 
