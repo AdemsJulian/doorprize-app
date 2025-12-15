@@ -14,11 +14,12 @@ export const dateToString = (date) => {
 }
 
 export const converToDate = (date) => {
-    if (isEmpty(date) == false) {
-        return new Date(date)
+    if (isEmpty(date) === false) {
+        const parsed = new Date(date)
+        return isNaN(parsed) ? null : parsed
     }
 
-    return ''
+    return null
 }
 
 export function formatIDR(amount) {

@@ -56,6 +56,20 @@ export default [
                 route: route('gift.index'),
                 active: 'gift.*',
             },
+            {
+                name: 'Pembicara',
+                show: true,
+                icon: null,
+                route: route('event.speakers.index'),
+                active: 'event.speakers.*',
+            },
+            {
+                name: 'Materi',
+                show: true,
+                icon: null,
+                route: route('event.materials.index'),
+                active: 'event.materials.*',
+            },
         ],
     },
     {
@@ -64,5 +78,26 @@ export default [
         icon: HiGift,
         route: route('draw.index'),
         active: 'draw.index',
+    },
+    {
+        name: 'Absensi Event',
+        show: true,
+        icon: HiUserGroup,
+        route: route('attendance.index'),
+        active: 'attendance.*',
+    },
+    {
+        name: 'Kalender Event',
+        show: true,
+        icon: HiChartPie,
+        route: route('events.calendar'),
+        active: 'events.calendar',
+    },
+    {
+        name: 'Event Dashboard',
+        show: true,
+        icon: HiChartPie,
+        route: route('events.dashboard'),
+        active: 'events.dashboard',
     },
 ]

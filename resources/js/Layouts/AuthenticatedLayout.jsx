@@ -1,6 +1,6 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { HiMenu, HiChevronDown, HiHome } from 'react-icons/hi'
@@ -22,7 +22,7 @@ export default function AuthenticatedLayout({children, auth, flash, page = '', a
     }, [flash])
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-700">
+        <div className="bg-aop min-h-screen flex flex-col bg-gray-100 dark:bg-gray-700">
             <nav className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">

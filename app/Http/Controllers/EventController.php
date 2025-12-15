@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
@@ -34,12 +35,41 @@ class EventController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
+            'slug' => 'nullable|string|max:255|unique:events,slug',
+            'start_at' => 'nullable|date',
+            'end_at' => 'nullable|date|after_or_equal:start_at',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'agenda' => 'nullable|string',
+            'capacity' => 'nullable|integer|min:0',
+            'registration_deadline' => 'nullable|date',
+            'pic_name' => 'nullable|string|max:255',
+            'pic_contact' => 'nullable|string|max:255',
+            'is_public' => 'nullable|boolean',
+            'budget_total' => 'nullable|numeric|min:0',
             'image' => 'nullable|image',
         ]);
+
+        $slug = $request->slug ?? Str::slug($request->name);
+        if ($slug && Event::where('slug', $slug)->exists()) {
+            $slug = Str::slug($request->name . '-' . Str::random(5));
+        }
 
         $event = Event::make([
             'name' => $request->name,
             'date' => $request->date,
+            'slug' => $slug,
+            'start_at' => $request->start_at ?? $request->date,
+            'end_at' => $request->end_at ?? $request->date,
+            'location' => $request->location,
+            'description' => $request->description,
+            'agenda' => $request->agenda,
+            'capacity' => $request->capacity ?? 0,
+            'registration_deadline' => $request->registration_deadline,
+            'pic_name' => $request->pic_name,
+            'pic_contact' => $request->pic_contact,
+            'is_public' => $request->boolean('is_public', true),
+            'budget_total' => $request->budget_total ?? 0,
         ]);
 
         if ($request->hasFile('image')) {
@@ -61,12 +91,41 @@ class EventController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
+            'slug' => 'nullable|string|max:255|unique:events,slug,' . $event->id,
+            'start_at' => 'nullable|date',
+            'end_at' => 'nullable|date|after_or_equal:start_at',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'agenda' => 'nullable|string',
+            'capacity' => 'nullable|integer|min:0',
+            'registration_deadline' => 'nullable|date',
+            'pic_name' => 'nullable|string|max:255',
+            'pic_contact' => 'nullable|string|max:255',
+            'is_public' => 'nullable|boolean',
+            'budget_total' => 'nullable|numeric|min:0',
             'image' => 'nullable|image',
         ]);
+
+        $slug = $request->slug ?? Str::slug($request->name);
+        if ($slug && Event::where('slug', $slug)->where('id', '<>', $event->id)->exists()) {
+            $slug = Str::slug($request->name . '-' . Str::random(5));
+        }
 
         $event->fill([
             'name' => $request->name,
             'date' => $request->date,
+            'slug' => $slug,
+            'start_at' => $request->start_at ?? $event->start_at,
+            'end_at' => $request->end_at ?? $event->end_at,
+            'location' => $request->location,
+            'description' => $request->description,
+            'agenda' => $request->agenda,
+            'capacity' => $request->capacity ?? $event->capacity,
+            'registration_deadline' => $request->registration_deadline,
+            'pic_name' => $request->pic_name,
+            'pic_contact' => $request->pic_contact,
+            'is_public' => $request->boolean('is_public', $event->is_public),
+            'budget_total' => $request->budget_total ?? $event->budget_total,
         ]);
 
         if ($request->hasFile('image')) {

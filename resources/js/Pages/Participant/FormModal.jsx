@@ -20,6 +20,9 @@ export default function FormModal(props) {
             email: '',
             unit: '',
             is_active: null,
+            registration_status: 'registered',
+            registration_notes: '',
+            ticket_code: '',
             image: null,
             image_url: '',
         })
@@ -74,7 +77,10 @@ export default function FormModal(props) {
                 email: participant.email,
                 unit: participant.unit,
                 image_url: participant.image_url,
-                is_active: participant.is_active
+                is_active: participant.is_active,
+                registration_status: participant.registration_status,
+                registration_notes: participant.registration_notes,
+                ticket_code: participant.ticket_code,
             })
             return
         }
@@ -126,6 +132,39 @@ export default function FormModal(props) {
                 onChange={handleOnChange}
                 label="Unit Kerja"
                 error={errors.unit}
+            />
+            <div className="mb-3">
+                <label className="block text-sm font-medium">Status Registrasi</label>
+                <select
+                    name="registration_status"
+                    value={data.registration_status}
+                    onChange={handleOnChange}
+                    className="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white"
+                >
+                    <option value="registered">Registered</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="waitlisted">Waitlisted</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                {errors.registration_status && <p className="text-red-600 text-sm">{errors.registration_status}</p>}
+            </div>
+            <div className="mb-3">
+                <label className="block text-sm font-medium">Catatan</label>
+                <textarea
+                    name="registration_notes"
+                    value={data.registration_notes}
+                    onChange={handleOnChange}
+                    className="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white"
+                    rows={3}
+                />
+                {errors.registration_notes && <p className="text-red-600 text-sm">{errors.registration_notes}</p>}
+            </div>
+            <FormInput
+                name="ticket_code"
+                value={data.ticket_code}
+                onChange={handleOnChange}
+                label="Ticket Code (opsional)"
+                error={errors.ticket_code}
             />
             <ToggleSwitch checked={status} label="IsActive" onChange={setStatus} className='py-2' />
             <FormFile

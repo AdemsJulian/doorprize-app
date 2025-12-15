@@ -22,7 +22,8 @@ export default function Participan(props) {
 
     const [event, setEvent] = useState(null)
     const [search, setSearch] = useState('')
-    const preValue = usePrevious(`${search}${event}`)
+    const [registrationStatus, setRegistrationStatus] = useState('')
+    const preValue = usePrevious(`${search}${event}${registrationStatus}`)
 
     const confirmModal = useModalState()
     const formModal = useModalState()
@@ -43,19 +44,33 @@ export default function Participan(props) {
         }
     }
 
-    const params = { q: search, event_id: event?.id }
+    const params = { q: search, event_id: event?.id, status: registrationStatus }
     useEffect(() => {
         if (preValue) {
             router.get(
                 route(route().current()),
-                { q: search, event_id: event?.id },
+                { q: search, event_id: event?.id, status: registrationStatus },
                 {
                     replace: true,
                     preserveState: true,
                 }
             )
         }
-    }, [search, event])
+    }, [search, event, registrationStatus])
+
+    const handleExport = () => {
+        router.get(route('participant.export'), { event_id: event?.id, status: registrationStatus })
+    }
+
+    const handleBroadcast = () => {
+        const message = prompt('Pesan broadcast (Teams/Email):')
+        if (!message) return
+        router.post(route('participant.broadcast'), {
+            event_id: event?.id,
+            status: registrationStatus,
+            message,
+        })
+    }
 
     return (
         <AuthenticatedLayout
@@ -78,6 +93,10 @@ export default function Participan(props) {
                                 >
                                     Tambah
                                 </Button>
+                                <div className="flex space-x-2 mt-2">
+                                    <Button size="xs" type="secondary" onClick={handleExport}>Export</Button>
+                                    <Button size="xs" onClick={handleBroadcast}>Broadcast</Button>
+                                </div>
                             </div>
                             <div className="flex flex-col items-center">
                                 <div className="w-full">
@@ -96,6 +115,19 @@ export default function Participan(props) {
                                         }
                                         value={search}
                                     />
+                                </div>
+                                <div className="w-full mt-2">
+                                    <select
+                                        className="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white"
+                                        value={registrationStatus}
+                                        onChange={(e) => setRegistrationStatus(e.target.value)}
+                                    >
+                                        <option value="">Status registrasi</option>
+                                        <option value="registered">Registered</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="waitlisted">Waitlisted</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +165,12 @@ export default function Participan(props) {
                                                 className="py-3 px-6"
                                             >
                                                 Status
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-3 px-6"
+                                            >
+                                                Ticket
                                             </th>
                                             <th
                                                 scope="col"
@@ -177,9 +215,23 @@ export default function Participan(props) {
                                                 <Badge color={participant.is_active ? 'info' : 'gray'} size="sm">
                                                     {participant.is_active ? 'Active' : 'Non-Active'}
                                                 </Badge>
+                                                <div className="text-xs text-gray-500">{participant.registration_status}</div>
+                                                </td>
+                                                <td className="py-4 px-6 text-sm">
+                                                    {participant.ticket_code}
+                                                    {participant.ticket_url && (
+                                                        <a
+                                                            href={participant.ticket_url}
+                                                            className="text-blue-600 underline block"
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                        >
+                                                            Lihat tiket
+                                                        </a>
+                                                    )}
                                                 </td>
                                                 <td className="py-4 px-6">
-                                                    {participant.event.name}
+                                                    {participant.event?.name}
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     {participant.image_url !==

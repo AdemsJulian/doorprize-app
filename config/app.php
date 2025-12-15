@@ -84,6 +84,9 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'corporate_domain' => env('CORPORATE_EMAIL_DOMAIN'),
+    'ms_teams_webhook' => env('MS_TEAMS_WEBHOOK_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
