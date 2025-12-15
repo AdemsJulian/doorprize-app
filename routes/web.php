@@ -75,10 +75,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/participants/import', [ParticipantController::class, 'importPage'])->name('participant.import');
     Route::post('/participants/import', [ParticipantController::class, 'importProccess']);
     Route::post('/participants', [ParticipantController::class, 'store'])->name('participant.store');
+    Route::post('/participants/broadcast', [ParticipantController::class, 'broadcast'])->name('participant.broadcast');
     Route::post('/participants/{participant}', [ParticipantController::class, 'update'])->name('participant.update');
     Route::delete('/participants/{participant}', [ParticipantController::class, 'destroy'])->name('participant.destroy');
     Route::get('/participants/export', [ParticipantController::class, 'export'])->name('participant.export');
-    Route::post('/participants/broadcast', [ParticipantController::class, 'broadcast'])->name('participant.broadcast');
 
     // Attendance
     Route::get('/attendance', [ParticipantController::class, 'attendance'])->name('attendance.index');
