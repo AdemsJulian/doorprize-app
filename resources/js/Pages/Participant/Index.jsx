@@ -69,13 +69,17 @@ export default function Participan(props) {
         }
         const message = prompt('Pesan broadcast (Teams/Email):')
         if (!message) return
-        router.post('/participants/broadcast', {
-            event_id: event?.id,
-            status: registrationStatus,
-            message,
-        }, {
-            preserveScroll: true,
-        })
+        router.post(
+            route('participant.broadcast'),
+            {
+                event_id: event?.id,
+                status: registrationStatus,
+                message,
+            },
+            {
+                preserveScroll: true,
+            }
+        )
     }
 
     return (
