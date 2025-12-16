@@ -16,10 +16,6 @@ class EventCalendarController extends Controller
                     $q->where('registration_status', 'confirmed');
                 },
             ])
-            ->where(function ($q) {
-                $q->whereNull('start_at')
-                    ->orWhere('start_at', '>=', now()->subDay());
-            })
             ->when($request->location, fn ($q) => $q->where('location', 'like', '%' . $request->location . '%'))
             ->when($request->status, function ($q) use ($request) {
                 if ($request->status === 'open') {
@@ -33,7 +29,7 @@ class EventCalendarController extends Controller
                         ->where('registration_deadline', '<', now());
                 }
             })
-            ->orderBy('start_at', 'asc')
+            ->orderByRaw('COALESCE(start_at, date) asc')
             ->get();
 
         return inertia('Event/Calendar', [
